@@ -1,0 +1,2353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ATLAS V3 — Autonomous AI Teacher</title>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+
+/* =====================================================
+   RESET
+===================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:#050505;
+    color:#f5f5f5;
+    font-family:Arial, Helvetica, sans-serif;
+    overflow-x:hidden;
+}
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+:root{
+
+    --blue:#68c9ff;
+    --blue-dark:#1786cf;
+
+    --purple:#9d6cff;
+
+    --gold:#d9ae62;
+
+    --gray:#929292;
+
+    --line:rgba(255,255,255,.12);
+
+}
+
+
+/* =====================================================
+   BACKGROUND GRAIN
+===================================================== */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    pointer-events:none;
+
+    z-index:100;
+
+    opacity:.045;
+
+    background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+nav{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+
+    height:75px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 5%;
+
+    z-index:1000;
+
+    mix-blend-mode:difference;
+
+}
+
+
+.logo{
+
+    font-size:20px;
+
+    font-weight:900;
+
+    letter-spacing:5px;
+
+}
+
+.logo span{
+
+    color:var(--blue);
+
+}
+
+
+.menu{
+
+    display:flex;
+
+    gap:25px;
+
+}
+
+
+.menu a{
+
+    text-decoration:none;
+
+    color:white;
+
+    font-size:12px;
+
+    letter-spacing:1px;
+
+    opacity:.8;
+
+    transition:.3s;
+
+}
+
+
+.menu a:hover{
+
+    opacity:1;
+
+    color:var(--blue);
+
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero{
+
+    height:100vh;
+
+    min-height:800px;
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:
+
+    radial-gradient(
+        circle at 50% 55%,
+        rgba(33,105,165,.30),
+        transparent 30%
+    ),
+
+    radial-gradient(
+        circle at 50% 0%,
+        rgba(92,57,160,.18),
+        transparent 30%
+    ),
+
+    #050505;
+
+}
+
+
+.hero-grid{
+
+    position:absolute;
+
+    inset:0;
+
+    opacity:.12;
+
+    background-image:
+
+    linear-gradient(
+        rgba(255,255,255,.1) 1px,
+        transparent 1px
+    ),
+
+    linear-gradient(
+        90deg,
+        rgba(255,255,255,.1) 1px,
+        transparent 1px
+    );
+
+    background-size:
+    70px 70px;
+
+    mask-image:
+    linear-gradient(
+        to bottom,
+        black,
+        transparent
+    );
+
+}
+
+
+/* =====================================================
+   MASSIVE TEXT
+===================================================== */
+
+.hero-title{
+
+    position:absolute;
+
+    top:12%;
+
+    width:100%;
+
+    text-align:center;
+
+    font-size:
+
+    clamp(
+        100px,
+        20vw,
+        330px
+    );
+
+    font-weight:900;
+
+    letter-spacing:-.1em;
+
+    line-height:.7;
+
+    color:#e8e8e8;
+
+    z-index:1;
+
+    pointer-events:none;
+
+}
+
+
+.hero-title span{
+
+    color:transparent;
+
+    -webkit-text-stroke:
+
+    2px
+
+    rgba(104,201,255,.65);
+
+}
+
+
+/* =====================================================
+   ROBOT
+===================================================== */
+
+.hero-robot{
+
+    position:absolute;
+
+    width:
+
+    min(
+        750px,
+        85vw
+    );
+
+    left:50%;
+
+    bottom:-7%;
+
+    transform:
+
+    translateX(-50%);
+
+    z-index:3;
+
+    filter:
+
+    drop-shadow(
+        0 50px 60px
+        rgba(0,0,0,.9)
+    );
+
+}
+
+
+/* =====================================================
+   HERO TEXT
+===================================================== */
+
+.hero-info{
+
+    position:absolute;
+
+    bottom:55px;
+
+    left:5%;
+
+    z-index:5;
+
+    max-width:370px;
+
+}
+
+
+.hero-info small{
+
+    color:var(--blue);
+
+    letter-spacing:3px;
+
+    font-size:10px;
+
+}
+
+
+.hero-info h1{
+
+    font-size:40px;
+
+    letter-spacing:-.05em;
+
+    margin:
+
+    12px 0;
+
+}
+
+
+.hero-info p{
+
+    color:#999;
+
+    line-height:1.6;
+
+    font-size:14px;
+
+}
+
+
+.scroll{
+
+    position:absolute;
+
+    right:5%;
+
+    bottom:55px;
+
+    z-index:5;
+
+    font-size:11px;
+
+    letter-spacing:2px;
+
+    writing-mode:vertical-rl;
+
+    color:#aaa;
+
+}
+
+
+/* =====================================================
+   GENERIC SECTION
+===================================================== */
+
+section{
+
+    position:relative;
+
+}
+
+
+.section-padding{
+
+    padding:
+
+    150px 6%;
+
+}
+
+
+/* =====================================================
+   STATEMENT
+===================================================== */
+
+.statement{
+
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    overflow:hidden;
+
+}
+
+
+.statement h2{
+
+    max-width:1400px;
+
+    font-size:
+
+    clamp(
+        60px,
+        10vw,
+        180px
+    );
+
+    line-height:.86;
+
+    letter-spacing:-.09em;
+
+}
+
+
+.statement .gray{
+
+    color:#383838;
+
+}
+
+
+.statement .blue{
+
+    color:var(--blue);
+
+}
+
+
+/* =====================================================
+   STICKY STORY
+===================================================== */
+
+.story{
+
+    height:400vh;
+
+}
+
+
+.story-sticky{
+
+    position:sticky;
+
+    top:0;
+
+    height:100vh;
+
+    overflow:hidden;
+
+    background:
+
+    radial-gradient(
+        circle at center,
+        #10263a,
+        #050505 65%
+    );
+
+}
+
+
+/* ROBOT */
+
+.story-robot{
+
+    position:absolute;
+
+    left:50%;
+
+    top:50%;
+
+    width:
+
+    min(
+        600px,
+        65vw
+    );
+
+    transform:
+
+    translate(-50%,-50%);
+
+    z-index:3;
+
+}
+
+
+/* STORY WORD */
+
+.story-word{
+
+    position:absolute;
+
+    left:5%;
+
+    top:50%;
+
+    transform:
+
+    translateY(-50%);
+
+    font-size:
+
+    clamp(
+        70px,
+        13vw,
+        200px
+    );
+
+    font-weight:900;
+
+    letter-spacing:-.1em;
+
+    opacity:.08;
+
+}
+
+
+/* INFO PANEL */
+
+.story-panel{
+
+    position:absolute;
+
+    right:7%;
+
+    top:50%;
+
+    transform:
+
+    translateY(-50%);
+
+    width:330px;
+
+    padding:25px;
+
+    background:
+
+    rgba(8,14,20,.72);
+
+    backdrop-filter:
+
+    blur(20px);
+
+    border:
+
+    1px solid
+    var(--line);
+
+    border-radius:18px;
+
+    z-index:5;
+
+}
+
+
+.story-number{
+
+    color:var(--blue);
+
+    font-size:11px;
+
+    letter-spacing:3px;
+
+}
+
+
+.story-panel h3{
+
+    font-size:40px;
+
+    margin:
+
+    20px 0;
+
+    letter-spacing:-.06em;
+
+}
+
+
+.story-panel p{
+
+    color:#999;
+
+    line-height:1.7;
+
+    font-size:14px;
+
+}
+
+
+/* =====================================================
+   FEATURES
+===================================================== */
+
+.features-section{
+
+    padding:
+
+    150px 6%;
+
+    background:#0a0a0a;
+
+}
+
+
+.section-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-end;
+
+    margin-bottom:90px;
+
+}
+
+
+.section-top h2{
+
+    font-size:
+
+    clamp(
+        55px,
+        8vw,
+        130px
+    );
+
+    letter-spacing:-.08em;
+
+    line-height:.85;
+
+}
+
+
+.section-top p{
+
+    max-width:300px;
+
+    color:#888;
+
+    line-height:1.6;
+
+}
+
+
+/* FEATURE ROW */
+
+.feature-row{
+
+    display:grid;
+
+    grid-template-columns:
+
+    100px
+    1fr
+    1fr;
+
+    align-items:center;
+
+    min-height:180px;
+
+    border-top:
+
+    1px solid
+    var(--line);
+
+    transition:.4s;
+
+}
+
+
+.feature-row:hover{
+
+    padding-left:25px;
+
+    background:
+
+    linear-gradient(
+        90deg,
+        rgba(104,201,255,.09),
+        transparent
+    );
+
+}
+
+
+.feature-row:last-child{
+
+    border-bottom:
+
+    1px solid
+    var(--line);
+
+}
+
+
+.feature-number{
+
+    color:var(--blue);
+
+    font-size:13px;
+
+}
+
+
+.feature-row h3{
+
+    font-size:
+
+    clamp(
+        30px,
+        4vw,
+        60px
+    );
+
+    letter-spacing:-.06em;
+
+}
+
+
+.feature-row p{
+
+    color:#888;
+
+    line-height:1.6;
+
+    max-width:420px;
+
+}
+
+
+/* =====================================================
+   HORIZONTAL SCROLL
+===================================================== */
+
+.horizontal-section{
+
+    height:100vh;
+
+    overflow:hidden;
+
+    background:#f2f2f2;
+
+    color:#111;
+
+}
+
+
+.horizontal-track{
+
+    height:100%;
+
+    width:300%;
+
+    display:flex;
+
+}
+
+
+.horizontal-card{
+
+    width:100vw;
+
+    height:100%;
+
+    flex:none;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    position:relative;
+
+}
+
+
+.horizontal-card h2{
+
+    font-size:
+
+    clamp(
+        70px,
+        13vw,
+        220px
+    );
+
+    letter-spacing:-.1em;
+
+    line-height:.8;
+
+}
+
+
+.horizontal-card p{
+
+    position:absolute;
+
+    bottom:12%;
+
+    width:300px;
+
+    text-align:center;
+
+    color:#555;
+
+    line-height:1.6;
+
+}
+
+
+.face-icon{
+
+    position:absolute;
+
+    top:50%;
+
+    right:15%;
+
+    transform:
+
+    translateY(-50%);
+
+    width:250px;
+
+    height:250px;
+
+    background:#050505;
+
+    border-radius:50px;
+
+    box-shadow:
+
+    0 30px 70px
+    rgba(0,0,0,.3);
+
+}
+
+
+.face-eyes{
+
+    position:absolute;
+
+    top:95px;
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:60px;
+
+}
+
+
+.face-eye{
+
+    width:22px;
+
+    height:22px;
+
+    border:
+
+    3px solid
+    var(--blue);
+
+    border-radius:50%;
+
+    box-shadow:
+
+    0 0 25px
+    var(--blue);
+
+}
+
+
+.face-mouth{
+
+    position:absolute;
+
+    bottom:60px;
+
+    left:95px;
+
+    width:60px;
+
+    height:25px;
+
+    border-bottom:
+
+    3px solid
+    var(--blue);
+
+    border-radius:50%;
+
+}
+
+
+/* =====================================================
+   AI BRAIN
+===================================================== */
+
+.brain-section{
+
+    min-height:110vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    overflow:hidden;
+
+    background:
+
+    radial-gradient(
+        circle at center,
+        rgba(108,73,190,.25),
+        transparent 25%
+    ),
+
+    #050505;
+
+}
+
+
+.brain-orb{
+
+    position:absolute;
+
+    width:
+
+    min(
+        650px,
+        80vw
+    );
+
+    aspect-ratio:1;
+
+    border-radius:50%;
+
+    background:
+
+    radial-gradient(
+        circle at 35% 25%,
+
+        #ffffff,
+
+        #72caff 5%,
+
+        #326aa3 20%,
+
+        #281a50 45%,
+
+        #000 70%
+    );
+
+    filter:
+
+    blur(.3px);
+
+    box-shadow:
+
+    0 0 100px
+    rgba(75,160,255,.5);
+
+}
+
+
+.brain-content{
+
+    position:relative;
+
+    z-index:5;
+
+}
+
+
+.brain-content h2{
+
+    font-size:
+
+    clamp(
+        65px,
+        10vw,
+        160px
+    );
+
+    letter-spacing:-.09em;
+
+    line-height:.85;
+
+}
+
+
+.brain-content p{
+
+    max-width:600px;
+
+    margin:
+
+    30px auto;
+
+    color:#aaa;
+
+    line-height:1.7;
+
+}
+
+
+/* =====================================================
+   FINAL
+===================================================== */
+
+.final{
+
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    overflow:hidden;
+
+    background:
+
+    radial-gradient(
+        circle at 50% 45%,
+        rgba(32,105,165,.25),
+        transparent 35%
+    ),
+
+    #000;
+
+}
+
+
+.final-robot{
+
+    position:absolute;
+
+    bottom:-15%;
+
+    left:50%;
+
+    width:
+
+    min(
+        600px,
+        80vw
+    );
+
+    transform:
+
+    translateX(-50%);
+
+    opacity:.35;
+
+}
+
+
+.final h2{
+
+    position:relative;
+
+    z-index:4;
+
+    font-size:
+
+    clamp(
+        65px,
+        11vw,
+        180px
+    );
+
+    line-height:.82;
+
+    letter-spacing:-.1em;
+
+}
+
+
+.final span{
+
+    color:var(--blue);
+
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer{
+
+    padding:
+
+    35px 6%;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    background:#000;
+
+    color:#666;
+
+    font-size:11px;
+
+    letter-spacing:1px;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:900px){
+
+    .menu{
+
+        display:none;
+
+    }
+
+
+    .story-panel{
+
+        right:5%;
+
+        bottom:8%;
+
+        top:auto;
+
+        transform:none;
+
+        width:90%;
+
+    }
+
+
+    .story-word{
+
+        top:20%;
+
+    }
+
+
+    .feature-row{
+
+        grid-template-columns:
+
+        60px
+        1fr;
+
+        padding:
+
+        30px 0;
+
+    }
+
+
+    .feature-row p{
+
+        grid-column:
+
+        2;
+
+        margin-top:15px;
+
+    }
+
+
+    .section-top{
+
+        display:block;
+
+    }
+
+
+    .section-top p{
+
+        margin-top:30px;
+
+    }
+
+
+    .face-icon{
+
+        opacity:.3;
+
+        right:50%;
+
+        transform:
+
+        translate(50%,-50%);
+
+    }
+
+}
+
+
+@media(max-width:600px){
+
+    .hero-info{
+
+        left:7%;
+
+        right:7%;
+
+        bottom:45px;
+
+    }
+
+
+    .scroll{
+
+        display:none;
+
+    }
+
+
+    .story-robot{
+
+        width:100vw;
+
+    }
+
+
+    footer{
+
+        flex-direction:column;
+
+        gap:12px;
+
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+NAVIGATION
+===================================================== -->
+
+<nav>
+
+    <div class="logo">
+
+        ATLAS
+
+        <span>V3</span>
+
+    </div>
+
+
+    <div class="menu">
+
+        <a href="#story">
+
+            SYSTEM
+
+        </a>
+
+        <a href="#features">
+
+            FEATURES
+
+        </a>
+
+        <a href="#brain">
+
+            BRAIN
+
+        </a>
+
+        <a href="#vision">
+
+            VISION
+
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+HERO
+===================================================== -->
+
+<section class="hero">
+
+
+    <div class="hero-grid"></div>
+
+
+    <div class="hero-title">
+
+        ATLAS
+
+        <span>V3</span>
+
+    </div>
+
+
+
+    <!-- YOUR TRANSPARENT ROBOT IMAGE -->
+
+    <img
+
+    src="atlas-v3.png"
+
+    class="hero-robot"
+
+    id="heroRobot"
+
+    alt="ATLAS V3 Robot">
+
+
+
+    <div class="hero-info">
+
+        <small>
+
+            AUTONOMOUS AI TEACHER
+
+        </small>
+
+
+        <h1>
+
+            Intelligence.
+
+            Embodied.
+
+        </h1>
+
+
+        <p>
+
+            A humanoid AI teacher designed
+            to interact, explain, move,
+            respond and teach.
+
+        </p>
+
+    </div>
+
+
+    <div class="scroll">
+
+        SCROLL TO EXPLORE
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+BIG STATEMENT
+===================================================== -->
+
+<section class="statement">
+
+
+    <h2>
+
+        NOT JUST
+
+        <span class="gray">
+
+            AN AI.
+
+        </span>
+
+        <br>
+
+        <span class="blue">
+
+            A TEACHER.
+
+        </span>
+
+    </h2>
+
+
+</section>
+
+
+
+<!-- =====================================================
+STORY
+===================================================== -->
+
+<section
+id="story"
+class="story">
+
+
+    <div class="story-sticky">
+
+
+        <div class="story-word">
+
+            ATLAS
+
+        </div>
+
+
+        <img
+
+        src="atlas-v3.png"
+
+        class="story-robot"
+
+        id="storyRobot"
+
+        alt="ATLAS V3">
+
+
+
+        <div class="story-panel">
+
+            <div
+            class="story-number"
+            id="storyNumber">
+
+                01 / 05
+
+            </div>
+
+
+            <h3
+            id="storyTitle">
+
+                THE FACE
+
+            </h3>
+
+
+            <p
+            id="storyText">
+
+                A digital face designed
+                to communicate attention,
+                expressions and teaching states.
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+FEATURES
+===================================================== -->
+
+<section
+id="features"
+class="features-section">
+
+
+    <div class="section-top">
+
+        <h2>
+
+            ONE BODY.
+
+            <br>
+
+            MANY SYSTEMS.
+
+        </h2>
+
+
+        <p>
+
+            Every part of ATLAS V3
+            contributes to a single goal:
+            creating an intelligent
+            physical teacher.
+
+        </p>
+
+    </div>
+
+
+
+    <div class="feature-row">
+
+        <div class="feature-number">
+
+            01
+
+        </div>
+
+
+        <h3>
+
+            Screen Face
+
+        </h3>
+
+
+        <p>
+
+            Digital expressions,
+            visual feedback
+            and an instantly
+            recognizable identity.
+
+        </p>
+
+    </div>
+
+
+
+    <div class="feature-row">
+
+        <div class="feature-number">
+
+            02
+
+        </div>
+
+
+        <h3>
+
+            AI Teacher Brain
+
+        </h3>
+
+
+        <p>
+
+            Lesson awareness,
+            reasoning,
+            conversation
+            and teaching control.
+
+        </p>
+
+    </div>
+
+
+
+    <div class="feature-row">
+
+        <div class="feature-number">
+
+            03
+
+        </div>
+
+
+        <h3>
+
+            Continuous Teaching
+
+        </h3>
+
+
+        <p>
+
+            Maintains lesson flow
+            instead of treating
+            every response
+            as a separate conversation.
+
+        </p>
+
+    </div>
+
+
+
+    <div class="feature-row">
+
+        <div class="feature-number">
+
+            04
+
+        </div>
+
+
+        <h3>
+
+            Smartboard Control
+
+        </h3>
+
+
+        <p>
+
+            Connects speech,
+            explanations
+            and visual teaching
+            material.
+
+        </p>
+
+    </div>
+
+
+
+    <div class="feature-row">
+
+        <div class="feature-number">
+
+            05
+
+        </div>
+
+
+        <h3>
+
+            Autonomous Movement
+
+        </h3>
+
+
+        <p>
+
+            A mobile platform concept
+            for controlled navigation,
+            turning and classroom movement.
+
+        </p>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+HORIZONTAL EXPERIENCE
+===================================================== -->
+
+<section class="horizontal-section">
+
+
+    <div
+    class="horizontal-track"
+    id="horizontalTrack">
+
+
+        <!-- CARD 1 -->
+
+        <div class="horizontal-card">
+
+
+            <h2>
+
+                SEE.
+
+            </h2>
+
+
+            <p>
+
+                Understand the classroom
+                and respond to
+                the physical environment.
+
+            </p>
+
+
+        </div>
+
+
+
+        <!-- CARD 2 -->
+
+        <div class="horizontal-card">
+
+
+            <h2>
+
+                THINK.
+
+            </h2>
+
+
+            <p>
+
+                Maintain teaching context
+                and decide what
+                comes next.
+
+            </p>
+
+
+        </div>
+
+
+
+        <!-- CARD 3 -->
+
+        <div class="horizontal-card">
+
+
+            <h2>
+
+                TEACH.
+
+            </h2>
+
+
+            <p>
+
+                Explain, interact,
+                demonstrate
+                and continue.
+
+            </p>
+
+
+            <div class="face-icon">
+
+
+                <div class="face-eyes">
+
+                    <div class="face-eye"></div>
+
+                    <div class="face-eye"></div>
+
+                </div>
+
+
+                <div class="face-mouth"></div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+AI BRAIN
+===================================================== -->
+
+<section
+id="brain"
+class="brain-section">
+
+
+    <div class="brain-orb"></div>
+
+
+    <div class="brain-content">
+
+
+        <h2>
+
+            THE
+
+            <br>
+
+            ATLAS BRAIN.
+
+        </h2>
+
+
+        <p>
+
+            The system behind
+            conversation,
+            lesson memory,
+            teaching decisions
+            and adaptive explanations.
+
+        </p>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+FINAL
+===================================================== -->
+
+<section
+id="vision"
+class="final">
+
+
+    <img
+
+    src="atlas-v3.png"
+
+    class="final-robot"
+
+    alt="ATLAS V3">
+
+
+
+    <h2>
+
+        THE FUTURE
+
+        <br>
+
+        OF EDUCATION
+
+        <br>
+
+        <span>
+
+            HAS A BODY.
+
+        </span>
+
+    </h2>
+
+
+</section>
+
+
+
+<!-- =====================================================
+FOOTER
+===================================================== -->
+
+<footer>
+
+    <div>
+
+        ATLAS V3
+
+        ·
+
+        AUTONOMOUS AI TEACHER
+
+    </div>
+
+
+    <div>
+
+        CONCEPT EXPERIENCE
+
+        ·
+
+        2026
+
+    </div>
+
+
+</footer>
+
+
+
+<script>
+
+
+/* =====================================================
+GSAP SETUP
+===================================================== */
+
+gsap.registerPlugin(
+    ScrollTrigger
+);
+
+
+
+/* =====================================================
+HERO ROBOT PARALLAX
+===================================================== */
+
+const heroRobot =
+document.getElementById(
+    "heroRobot"
+);
+
+
+window.addEventListener(
+"mousemove",
+
+(e)=>{
+
+    const x =
+
+    (
+        e.clientX /
+        window.innerWidth
+        - .5
+    ) * 25;
+
+
+    const y =
+
+    (
+        e.clientY /
+        window.innerHeight
+        - .5
+    ) * 10;
+
+
+    gsap.to(
+
+        heroRobot,
+
+        {
+
+            x:x,
+
+            y:y,
+
+            duration:1,
+
+            ease:"power3.out"
+
+        }
+
+    );
+
+}
+
+);
+
+
+
+/* =====================================================
+HERO ANIMATION
+===================================================== */
+
+gsap.from(
+
+".hero-title",
+
+{
+
+    y:-100,
+
+    opacity:0,
+
+    duration:1.5,
+
+    ease:"power4.out"
+
+}
+
+);
+
+
+gsap.from(
+
+".hero-info",
+
+{
+
+    y:80,
+
+    opacity:0,
+
+    delay:.5,
+
+    duration:1,
+
+    ease:"power3.out"
+
+}
+
+);
+
+
+
+/* =====================================================
+STORY DATA
+===================================================== */
+
+const storySteps = [
+
+    {
+
+        number:"01 / 05",
+
+        title:"THE FACE",
+
+        text:
+
+        "A digital face designed to communicate attention, expressions and teaching states."
+
+    },
+
+    {
+
+        number:"02 / 05",
+
+        title:"THE BRAIN",
+
+        text:
+
+        "Artificial intelligence maintains conversation, lesson context and teaching flow."
+
+    },
+
+    {
+
+        number:"03 / 05",
+
+        title:"THE ARMS",
+
+        text:
+
+        "Physical gestures and movement create a stronger connection between teaching and explanation."
+
+    },
+
+    {
+
+        number:"04 / 05",
+
+        title:"THE BODY",
+
+        text:
+
+        "A physical platform brings sensors, intelligence and mechanical systems together."
+
+    },
+
+    {
+
+        number:"05 / 05",
+
+        title:"THE MOVEMENT",
+
+        text:
+
+        "A mobile base enables ATLAS V3 to navigate and operate as a physical classroom presence."
+
+    }
+
+];
+
+
+const storyTitle =
+document.getElementById(
+    "storyTitle"
+);
+
+
+const storyText =
+document.getElementById(
+    "storyText"
+);
+
+
+const storyNumber =
+document.getElementById(
+    "storyNumber"
+);
+
+
+ScrollTrigger.create({
+
+    trigger:".story",
+
+    start:"top top",
+
+    end:"bottom bottom",
+
+    onUpdate:self=>{
+
+        const index =
+
+        Math.min(
+
+            4,
+
+            Math.floor(
+                self.progress * 5
+            )
+
+        );
+
+
+        const step =
+        storySteps[index];
+
+
+        if(
+            storyTitle.dataset.index
+            != index
+        ){
+
+            storyTitle.dataset.index =
+            index;
+
+
+            gsap.to(
+
+            ".story-panel",
+
+            {
+
+                opacity:0,
+
+                y:30,
+
+                duration:.2,
+
+                onComplete:()=>{
+
+
+                    storyNumber.textContent =
+                    step.number;
+
+
+                    storyTitle.textContent =
+                    step.title;
+
+
+                    storyText.textContent =
+                    step.text;
+
+
+                    gsap.to(
+
+                    ".story-panel",
+
+                    {
+
+                        opacity:1,
+
+                        y:0,
+
+                        duration:.5
+
+                    }
+
+                    );
+
+                }
+
+            }
+
+            );
+
+        }
+
+    }
+
+});
+
+
+
+/* =====================================================
+STORY ROBOT ANIMATION
+===================================================== */
+
+gsap.to(
+
+"#storyRobot",
+
+{
+
+    rotationY:360,
+
+    scale:1.12,
+
+    scrollTrigger:{
+
+        trigger:".story",
+
+        start:"top top",
+
+        end:"bottom bottom",
+
+        scrub:1
+
+    }
+
+}
+
+);
+
+
+
+/* =====================================================
+HORIZONTAL SCROLL
+===================================================== */
+
+gsap.to(
+
+"#horizontalTrack",
+
+{
+
+    xPercent:-66.666,
+
+    ease:"none",
+
+    scrollTrigger:{
+
+        trigger:".horizontal-section",
+
+        start:"top top",
+
+        end:"+=2500",
+
+        scrub:1,
+
+        pin:true
+
+    }
+
+}
+
+);
+
+
+
+/* =====================================================
+BRAIN ANIMATION
+===================================================== */
+
+gsap.to(
+
+".brain-orb",
+
+{
+
+    scale:1.25,
+
+    rotation:360,
+
+    scrollTrigger:{
+
+        trigger:".brain-section",
+
+        start:"top bottom",
+
+        end:"bottom top",
+
+        scrub:1
+
+    }
+
+}
+
+);
+
+
+
+/* =====================================================
+FINAL ROBOT
+===================================================== */
+
+gsap.to(
+
+".final-robot",
+
+{
+
+    y:-100,
+
+    scale:1.1,
+
+    scrollTrigger:{
+
+        trigger:".final",
+
+        start:"top bottom",
+
+        end:"bottom top",
+
+        scrub:1
+
+    }
+
+}
+
+);
+
+
+</script>
+
+</body>
+</html>
